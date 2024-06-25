@@ -1,8 +1,5 @@
-# React + Vite
+# Pulse Guard Web system
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This is the pulse guard web application to predict cardiovascular risks using Artificial Intelligence
+Developed by Pulse Guard Team for their Final year Research Project
+Aadhil Shihabdeen (Leader)
