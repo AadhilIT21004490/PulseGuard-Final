@@ -6,19 +6,16 @@ import numpy as np
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
 
-# Load the HF trained model
-model = joblib.load('src/ensemble_model.pkl')
+# Load the AF trained model
+model = joblib.load('src/model_pickle.pkl')
 
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json(force=True)
     features = np.array([
-        data['age'], data['anaemia'],
-        data['creatinine_phosphokinase'], data['diabetes'],
-        data['ejection_fraction'], data['high_blood_pressure'],
-        data['platelets'], data['serum_creatinine'],
-        data['serum_sodium'], data['sex'],
-        data['smoking'], data['time']
+        data['I'], data['II'], data['III'], data['aVF'], data['aVR'], data['aVL'],
+        data['V1'], data['V2'], data['V3'], data['V4'], data['V5'], data['V6'],
+        data['age'], data['sex'], data['height'], data['weight']
     ])
     features = features.reshape(1, -1)
     prediction = model.predict(features)

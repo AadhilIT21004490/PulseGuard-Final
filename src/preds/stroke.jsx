@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { TriangleAlert } from "lucide-react";
+import { TriangleAlert ,ShieldCheck } from "lucide-react";
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import AfHero from '../components/AfHero';
+import StrkHero from '../components/StrkHero';
 
 const Stroke = () => {
   const [formData, setFormData] = useState({
@@ -29,7 +29,7 @@ const Stroke = () => {
       parsedFormData[key] = parseFloat(formData[key]);
     });
 
-    fetch('http://127.0.0.1:5000/predict', {
+    fetch('http://127.0.0.1:5000/stroke', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -54,8 +54,7 @@ const Stroke = () => {
 
   return (
     <>
-      <Navbar/>
-      <AfHero/>
+      <StrkHero/>
       <div className="flex h-screen mb-8">
         <div>
           <form onSubmit={handleSubmit} className="max-w-xl min-w-max m-4 p-10 bg-white rounded-3xl shadow-xl">
@@ -89,8 +88,8 @@ const Stroke = () => {
             <div className="flex flex-wrap m-4 min-w-max">
               <div className="w-full sm:w-1/2 lg:w-1/3">
                 <div className="bg-neutral-900 rounded-3xl p-6 text-md border border-neutral-800">
-                  <h1 className={`text-4xl font-semibold ${prediction === 'high' ? 'text-red-500' : prediction === 'low' ? 'text-yellow-500' : 'text-green-500'}`}>
-                    {prediction === 'high' ? 'HIGH RISK' : prediction === 'low' ? 'LOW RISK' : 'NORMAL'}<TriangleAlert />
+                  <h1 className={`text-4xl font-semibold ${prediction === 1 ? 'text-red-500' : 'text-green-500'}`}>
+                  {prediction === 1 ? (<span>NEGATIVE <TriangleAlert /></span>) : (<span>POSITIVE</span>)}
                   </h1>
                   <h1>_</h1>
                   <p>Schedule regular check-ups to monitor your heart health. This includes tracking blood pressure, cholesterol levels, blood sugar levels, and weight.</p>
@@ -103,7 +102,6 @@ const Stroke = () => {
           )}
         </div>
       </div>
-      <Footer/>
     </>
   );
 }
