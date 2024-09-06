@@ -10,6 +10,7 @@ import Atrial from './preds/atrial';
 import Hattack from './preds/hattack';
 import Strk from './preds/stroke';
 import Hf from './preds/hf';
+import { AfTable } from './components/AfTable';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Workflow />
             <Pricing />
             <Testimonials />
+            <AfTable />
           </>
         } />
         <Route path="/atrial" element={<Atrial />} />

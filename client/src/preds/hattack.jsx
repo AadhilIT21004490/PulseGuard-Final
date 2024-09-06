@@ -3,6 +3,7 @@ import { TriangleAlert, ShieldCheck } from "lucide-react";
 import HaHero from '../components/HaHero';
 
 const Hattack = () => {
+
   const [formData, setFormData] = useState({
     Age: '', Gender: '', Heart_Rate: '',
     Systolic_Blood_Pressure: '', Diastolic_Blood_Pressure: '', Blood_Sugar: '',
