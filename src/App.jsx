@@ -10,6 +10,8 @@ import Atrial from './preds/atrial';
 import Hattack from './preds/hattack';
 import Strk from './preds/stroke';
 import Hf from './preds/hf';
+import Signup from './auth/Signup';
+import Login from './auth/Login';
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
         <Route path="/hattack" element={<Hattack />} />
         <Route path="/stroke" element={<Strk />} />
         <Route path="/hf" element={<Hf />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
       <Footer />
     </Router>

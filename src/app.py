@@ -3,17 +3,25 @@ from flask_cors import CORS
 import joblib
 import pickle
 import numpy as np
+from pymongo import MongoClient
+from bson.objectid import ObjectId
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_cors import CORS
+import logging
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
 
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+
 # Load models and scalers
-stroke_model = joblib.load('src/voting_clf.pkl')
-heart_failure_model = joblib.load('src/ensemble_model.pkl')
-af_model = joblib.load('src/model_pickle.pkl')
-with open('src/scaler.pkl', 'rb') as f:
+stroke_model = joblib.load('voting_clf.pkl')
+heart_failure_model = joblib.load('ensemble_model.pkl')
+af_model = joblib.load('model_pickle.pkl')
+with open('scaler.pkl', 'rb') as f:
     heart_attack_scaler = pickle.load(f)
-heart_attack_model = joblib.load('src/Best_ha_model.pkl')
+heart_attack_model = joblib.load('Best_ha_model.pkl')
 
 @app.route('/stroke', methods=['POST'])
 def predict_stroke():
@@ -68,6 +76,51 @@ def predict_heart_attack():
         return jsonify({'prediction': int(prediction[0])})
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
+    
+
+# MongoDB connection setup
+client = MongoClient("mongodb+srv://aashif1979:DNDS5P15dDGCWFt4@cluster0.nslx2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+db = client['pulse_guard']  # Replace 'pulse_guard' with your database name
+users_collection = db['users']  # Collection for storing user information
+
+# Signup route
+@app.route('/api/signup', methods=['POST'])
+def signup():
+    data = request.get_json()
+    username = data['username']
+    email = data['email']
+    password = data['password']
+
+    if users_collection.find_one({'email': email}):
+        return jsonify({'message': 'User already exists'}), 400
+
+    hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+
+    user_data = {
+        'username': username,
+        'email': email,
+        'password': hashed_password
+    }
+
+    users_collection.insert_one(user_data)
+
+    return jsonify({'message': 'User created successfully'}), 201
+
+# Login route
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    email = data['email']
+    password = data['password']
+
+    user = users_collection.find_one({'email': email})
+
+    if not user or not check_password_hash(user['password'], password):
+        return jsonify({'message': 'Invalid email or password'}), 401
+
+    return jsonify({'message': 'Login successful'}), 200
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

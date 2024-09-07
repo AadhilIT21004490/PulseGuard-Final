@@ -1,7 +1,32 @@
-import React from 'react'
+
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 
 const Login = () => {
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post('http://localhost:5000/api/login', {
+                email,
+                password
+            });
+
+            if (response.status === 200) {
+                navigate('/'); // Redirect to home page after successful login
+            }
+        } catch (err) {
+            setError('Invalid email or password');
+        }
+    };
+
   return (
     <>
         <div className="flex h-screen justify-center">
@@ -10,15 +35,26 @@ const Login = () => {
                 <h1 class="text-3xl font-semibold mb-6 text-black text-center">Sign In</h1>
                 <h1 class="text-sm font-semibold mb-6 text-gray-500 text-center">Login to Our Pulse Guard Community with all time access </h1>
                 
-                <form action="#" method="POST" class="space-y-4">
+                <form onSubmit={handleLogin} class="space-y-4">
                     
                     <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="text" id="email" name="email" class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300  text-black bg-white"/>
+                    <input 
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)} required 
+                        class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300  text-black bg-white"/>
                     </div>
                     <div>
                     <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                    <input type="password" id="password" name="password" class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300  text-black bg-white"/>
+                    <input 
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300  text-black bg-white"/>
                     </div>
                     <div>
                     <button type="submit" class="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300 ">Login</button>
@@ -46,7 +82,7 @@ const Login = () => {
                 </div>
                 </form>
                 <div class="mt-4 text-sm text-gray-600 text-center">
-                    <p>Don't have an account? <a href="#" class="text-black hover:underline">Signup here</a>
+                    <p>Don't have an account? <Link to="/signup" class="text-black hover:underline">Signup here</Link>
                     </p>
                 </div>
                 </div>
