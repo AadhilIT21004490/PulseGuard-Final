@@ -67,13 +67,35 @@ def predict_heart_failure():
 @app.route('/atrial', methods=['POST'])
 def predict_af():
     data = request.get_json(force=True)
-    features = np.array([
+    connection = create_db_connection()  # Create a new database connection
+    cursor = connection.cursor()
+    try:
+        features = np.array([
         data['I'], data['II'], data['III'], data['aVF'], data['aVR'], data['aVL'],
         data['V1'], data['V2'], data['V3'], data['V4'], data['V5'], data['V6'],
         data['age'], data['sex'], data['height'], data['weight']
-    ]).reshape(1, -1)
-    prediction = af_model.predict(features)
-    return jsonify({'prediction': int(prediction[0])})
+        ]).reshape(1, -1)
+    
+        prediction = af_model.predict(features)
+        prediction_value = int(prediction[0])
+
+        insert_query = """INSERT INTO af_data (I, II, III, aVF, aVR, aVL, V1, V2, V3, V4, V5, V6, age, sex, height, weight, prediction) 
+             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        record = (
+            data['I'], data['II'], data['III'], data['aVF'], data['aVR'], data['aVL'],
+            data['V1'], data['V2'], data['V3'], data['V4'], data['V5'], data['V6'],
+            data['age'], data['sex'], data['height'], data['weight'], prediction_value
+        )
+
+        cursor.execute(insert_query, record)
+        connection.commit()
+        return jsonify({'prediction': prediction_value})
+    except ValueError as e :
+        return jsonify({'error':str(e)}), 400
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
 # ======================================================================================
 # Heart Attack API
 # ======================================================================================

@@ -23,6 +23,9 @@ const Atrial = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    setError(null);
+    setPrediction(null);
+
     const parsedFormData = {
       ...formData,
       sex: formData.sex === 'Male' ? 1 : 0,
@@ -36,9 +39,7 @@ const Atrial = () => {
 
     fetch('http://127.0.0.1:5000/atrial', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json',},
       body: JSON.stringify(parsedFormData),
     })
       .then(response => {
