@@ -18,46 +18,97 @@ const Hattack = () => {
       [e.target.name]: e.target.value
     });
   };
+  // ======================================================================================
+  //                       OLD CODE
+  // ======================================================================================
+  
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   // Convert the relevant fields to numerical values
+  //   const parsedFormData = {
+  //     ...formData,
+  //     Blood_Sugar: formData.Blood_Sugar === 'Yes' ? 1 : 0,
+  //     Gender: formData.Gender === 'Male' ? 1 : 0,
+  //   };
+
+  //   // Convert other numeric string fields to actual numbers
+  //   Object.keys(parsedFormData).forEach(key => {
+  //     if (!isNaN(parsedFormData[key])) {
+  //       parsedFormData[key] = parseFloat(parsedFormData[key]);
+  //     }
+  //   });
+
+  //   fetch('http://127.0.0.1:5000/hattack', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(parsedFormData),
+  //   })
+  //   .then(response => {
+  //     if (!response.ok) {
+  //       throw new Error('Network response was not ok');
+  //     }
+  //     return response.json();
+  //   })
+  //   .then(data => {
+  //     setPrediction(data.prediction);
+  //     setError(null);
+  //   })
+  //   .catch(error => {
+  //     setError(error.message);
+  //     setPrediction(null);
+  //   });
+  // };
+
+  // ======================================================================================
+  //               NEW CODE BELOW
+  // ======================================================================================
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Convert the relevant fields to numerical values
+  
+    // Display loading or processing status to the user
+    setError(null);
+    setPrediction(null);
+  
+    // Prepare the data as expected by the backend
     const parsedFormData = {
       ...formData,
       Blood_Sugar: formData.Blood_Sugar === 'Yes' ? 1 : 0,
       Gender: formData.Gender === 'Male' ? 1 : 0,
     };
-
-    // Convert other numeric string fields to actual numbers
+  
+    // Convert numeric string fields to numbers
     Object.keys(parsedFormData).forEach(key => {
-      if (!isNaN(parsedFormData[key])) {
+      if (!isNaN(parsedFormData[key]) && parsedFormData[key] !== '') {
         parsedFormData[key] = parseFloat(parsedFormData[key]);
       }
     });
-
+  
     fetch('http://127.0.0.1:5000/hattack', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(parsedFormData),
     })
     .then(response => {
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Prediction service is currently unavailable.');
       }
       return response.json();
     })
     .then(data => {
+      if (data.error) {
+        throw new Error(data.error);
+      }
       setPrediction(data.prediction);
-      setError(null);
     })
     .catch(error => {
-      setError(error.message);
-      setPrediction(null);
+      setError(`Error: ${error.message}`);
     });
   };
+  
 
   return (
     <>
@@ -149,6 +200,9 @@ const Hattack = () => {
               })}
             </div>
             <div className="mt-4">
+              {error && (
+                <p className="text-red-500">{error}</p>  // Displaying error messages
+              )}
               <button className="px-4 py-1 text-white font-light tracking-wider bg-gray-900 rounded w-full" type="submit">PREDICT</button>
             </div>
           </form>

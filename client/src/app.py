@@ -3,9 +3,30 @@ from flask_cors import CORS
 import joblib
 import pickle
 import numpy as np
+import mysql.connector
+from mysql.connector import Error
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
+
+# ======================================================================================
+# DB CONNECTION
+# ======================================================================================
+
+def create_db_connection():
+    try:
+        connection = mysql.connector.connect(
+            host='localhost',
+            user='root',
+            password='',
+            database='pulse_guard'
+        )
+        return connection
+    except Error as e:
+        print(f"The error '{e}' occurred")
+        return None
+# ======================================================================================
+# ======================================================================================
 
 # Load models and scalers 
 stroke_model = joblib.load('client/src/voting_clf.pkl')
@@ -53,21 +74,67 @@ def predict_af():
     ]).reshape(1, -1)
     prediction = af_model.predict(features)
     return jsonify({'prediction': int(prediction[0])})
-
+# ======================================================================================
+# Heart Attack API
+# ======================================================================================
+# @app.route('/hattack', methods=['POST'])
+# def predict_heart_attack():
+#     data = request.get_json(force=True)
+#     try:
+#         features = np.array([
+#             float(data['Age']), float(data['Gender']), float(data['Heart_Rate']),
+#             float(data['Systolic_Blood_Pressure']), float(data['Diastolic_Blood_Pressure']),
+#             float(data['Blood_Sugar']), float(data['CK_MB']), float(data['Troponin'])
+#         ]).reshape(1, -1)
+#         features_scaled = heart_attack_scaler.transform(features)
+#         prediction = heart_attack_model.predict(features_scaled)
+#         return jsonify({'prediction': int(prediction[0])})
+#     except ValueError as e:
+#         return jsonify({'error': str(e)}), 400
+    
+# ======================================================================================
+# NEW API BELOW
+# ======================================================================================
+# Route to predict heart attack and store results
 @app.route('/hattack', methods=['POST'])
 def predict_heart_attack():
     data = request.get_json(force=True)
+    connection = create_db_connection()  # Create a new database connection
+    cursor = connection.cursor()
     try:
         features = np.array([
             float(data['Age']), float(data['Gender']), float(data['Heart_Rate']),
             float(data['Systolic_Blood_Pressure']), float(data['Diastolic_Blood_Pressure']),
             float(data['Blood_Sugar']), float(data['CK_MB']), float(data['Troponin'])
         ]).reshape(1, -1)
+        
         features_scaled = heart_attack_scaler.transform(features)
         prediction = heart_attack_model.predict(features_scaled)
-        return jsonify({'prediction': int(prediction[0])})
+        prediction_value = int(prediction[0])
+        
+        # SQL to insert data
+        insert_query = """
+        INSERT INTO heart_attack_data (Age, Gender, Heart_Rate, Systolic_BP, Diastolic_BP, Blood_Sugar, CK_MB, Troponin, Prediction)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        record = (
+            data['Age'], data['Gender'], data['Heart_Rate'], 
+            data['Systolic_Blood_Pressure'], data['Diastolic_Blood_Pressure'],
+            data['Blood_Sugar'], data['CK_MB'], data['Troponin'],
+            prediction_value
+        )
+        
+        cursor.execute(insert_query, record)
+        connection.commit()
+        return jsonify({'prediction': prediction_value})
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+# ======================================================================================
+# ======================================================================================
 
 if __name__ == '__main__':
     app.run(debug=True)
