@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+src/model_pickle.pkl
+*.pkl
+echo "src/model_pickle.pkl" >> .gitignore
+
