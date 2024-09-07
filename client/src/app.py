@@ -39,30 +39,83 @@ heart_attack_model = joblib.load('client/src/Best_ha_model.pkl')
 @app.route('/stroke', methods=['POST'])
 def predict_stroke():
     data = request.get_json(force=True)
-    features = np.array([
-        data['gender'], data['age'], data['hypertension'],
-        data['heart_disease'], data['ever_married'], data['Residence_type'],
-        data['avg_glucose_level'], data['bmi'], data['smoking_status_formerly_smoked'],
-        data['smoking_status_never_smoked'], data['smoking_status_smokes'], data['work_type_Govt_job'],
-        data['work_type_Never_worked'], data['work_type_Private'], data['work_type_Self_employed'],
-        data['work_type_children']
-    ]).reshape(1, -1)
-    prediction = stroke_model.predict(features)
-    return jsonify({'prediction': int(prediction[0])})
+    connection = create_db_connection()  # Create a new database connection
+    cursor = connection.cursor()
+    try:
+        features = np.array([
+            data['gender'], data['age'], data['hypertension'],
+            data['heart_disease'], data['ever_married'], data['Residence_type'],
+            data['avg_glucose_level'], data['bmi'], data['smoking_status_formerly_smoked'],
+            data['smoking_status_never_smoked'], data['smoking_status_smokes'], data['work_type_Govt_job'],
+            data['work_type_Never_worked'], data['work_type_Private'], data['work_type_Self_employed'],
+            data['work_type_children']
+        ]).reshape(1, -1)
+        prediction = stroke_model.predict(features)
+        prediction_value = int(prediction[0])
+        
+        insert_query = """INSERT INTO stroke_data (
+            gender, age, hypertension, heart_disease, ever_married, residence_type,
+            avg_glucose_level, bmi, smoking_status_formerly_smoked, smoking_status_never_smoked,
+            smoking_status_smokes, work_type_govt_job, work_type_never_worked, work_type_private,
+            work_type_self_employed, work_type_children, prediction)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        
+        record = (
+            data['gender'], data['age'], data['hypertension'], data['heart_disease'], data['ever_married'], data['Residence_type'],
+            data['avg_glucose_level'], data['bmi'], data['smoking_status_formerly_smoked'], data['smoking_status_never_smoked'],
+            data['smoking_status_smokes'], data['work_type_Govt_job'], data['work_type_Never_worked'], data['work_type_Private'],
+            data['work_type_Self_employed'], data['work_type_children'], prediction_value
+        )
+
+        cursor.execute(insert_query, record)
+        connection.commit()
+        return jsonify({'prediction': prediction_value})
+    except ValueError as e :
+        return jsonify({'error':str(e)}), 400
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
 
 @app.route('/hf', methods=['POST'])
 def predict_heart_failure():
     data = request.get_json(force=True)
-    features = np.array([
-        data['age'], data['anaemia'],
-        data['creatinine_phosphokinase'], data['diabetes'],
-        data['ejection_fraction'], data['high_blood_pressure'],
-        data['platelets'], data['serum_creatinine'],
-        data['serum_sodium'], data['sex'],
-        data['smoking'], data['time']
-    ]).reshape(1, -1)
-    prediction = heart_failure_model.predict(features)
-    return jsonify({'prediction': int(prediction[0])})
+    connection = create_db_connection()  # Create a new database connection
+    cursor = connection.cursor()
+    try:
+        features = np.array([
+            data['age'], data['anaemia'],
+            data['creatinine_phosphokinase'], data['diabetes'],
+            data['ejection_fraction'], data['high_blood_pressure'],
+            data['platelets'], data['serum_creatinine'],
+            data['serum_sodium'], data['sex'],
+            data['smoking'], data['time']
+        ]).reshape(1, -1)
+
+        prediction = heart_failure_model.predict(features)
+        prediction_value = int(prediction[0])
+
+        insert_query = """INSERT INTO heart_failure_data (age, anaemia, creatinine_phosphokinase, diabetes, ejection_fraction, high_blood_pressure, platelets, serum_creatinine, serum_sodium, sex, smoking, time, prediction) 
+             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        record = (
+            data['age'], data['anaemia'],
+            data['creatinine_phosphokinase'], data['diabetes'],
+            data['ejection_fraction'], data['high_blood_pressure'],
+            data['platelets'], data['serum_creatinine'],
+            data['serum_sodium'], data['sex'],
+            data['smoking'], data['time'], prediction_value
+        )
+
+        cursor.execute(insert_query, record)
+        connection.commit()
+        return jsonify({'prediction': prediction_value})
+    except ValueError as e :
+        return jsonify({'error':str(e)}), 400
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
 
 @app.route('/atrial', methods=['POST'])
 def predict_af():

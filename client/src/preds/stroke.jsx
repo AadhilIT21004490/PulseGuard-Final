@@ -24,6 +24,10 @@ const Stroke = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Display loading or processing status to the user
+    setError(null);
+    setPrediction(null);
+
     const parsedFormData = {};
     Object.keys(formData).forEach(key => {
       parsedFormData[key] = parseFloat(formData[key]);
@@ -31,9 +35,7 @@ const Stroke = () => {
 
     fetch('http://127.0.0.1:5000/stroke', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json',},
       body: JSON.stringify(parsedFormData),
     })
     .then(response => {

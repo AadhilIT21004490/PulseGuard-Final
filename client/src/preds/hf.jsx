@@ -22,6 +22,9 @@ const Hf = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    setError(null);
+    setPrediction(null);
+
     // Convert the relevant fields to numerical values
     const parsedFormData = {
       ...formData,
@@ -41,9 +44,7 @@ const Hf = () => {
 
     fetch('http://127.0.0.1:5000/hf', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json',},
       body: JSON.stringify(parsedFormData),
     })
     .then(response => {
