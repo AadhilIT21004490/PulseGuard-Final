@@ -12,6 +12,7 @@ import {
   Avatar,
   Tooltip,
   Progress,
+  Button,
 } from "@material-tailwind/react";
 import {
   EllipsisVerticalIcon,
@@ -26,8 +27,18 @@ import { ordersOverviewData } from "./components/orders-overview-data";
 import { CheckCircleIcon, ClockIcon } from "@heroicons/react/24/solid";
 
 export function Home() {
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <div className="mt-12">
+      <div className="mb-4 text-right">
+        <button className="py-2 px-3 rounded-md bg-gradient-to-r from-orange-500 to-orange-800" color="blue" onClick={handlePrint}>
+          Print as PDF
+        </button>
+      </div>
+      
       <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
         {statisticsCardsData.map(({ icon, title, footer, ...rest }) => (
           <StatisticsCard
