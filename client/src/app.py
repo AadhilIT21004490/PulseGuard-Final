@@ -18,7 +18,7 @@ def create_db_connection():
         connection = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='',
+            password='AAss12345',
             database='pulse_guard'
         )
         return connection
