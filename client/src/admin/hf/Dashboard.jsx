@@ -26,10 +26,61 @@ import { projectsTableData } from "./components/projects-table-data";
 import { ordersOverviewData } from "./components/orders-overview-data";
 import { CheckCircleIcon, ClockIcon } from "@heroicons/react/24/solid";
 
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 export function Home() {
   const handlePrint = () => {
     window.print();
   };
+
+  // const [data, setData] = useState({ age: 0 }); // Initialize with default value
+  const [data, setData] = useState({ });
+
+  useEffect(() => {
+    // Fetch the latest stroke data
+    axios
+      .get("http://127.0.0.1:5000/hf/latest")
+      .then((response) => {
+        setData(response.data); // Set the fetched data
+
+        // Update the statisticsCardsData with fetched age
+        statisticsCardsData[0].value = response.data.age;
+        // Update the Gender card (index 1)
+        statisticsCardsData[1].value = response.data.anaemia === 1 ? "Yes" : "No";
+        // Update the Heart Disease card (index 2)
+        statisticsCardsData[2].value = response.data.diabetes === 1 ? "Yes" : "No";
+        // Update the Heart Disease card (index 2)
+        statisticsCardsData[3].value = response.data.prediction === 1 ? "Negative" : "Positive";
+
+        // Update the chart with fetched values
+        statisticsChartsData[0].chart.series[0].data = [
+          response.data.serum_creatinine,
+          response.data.creatinine_phosphokinase,
+          response.data.ejection_fraction,
+        ];
+
+        statisticsChartsData[1].chart.series[0].data = [
+          response.data.serum_sodium,
+          response.data.ejection_fraction,
+          response.data.serum_sodium,
+          response.data.prediction,
+        ];
+
+        projectsTableData[0].values = response.data.sex === 1 ? "Male" : "Female";
+        projectsTableData[1].values = response.data.age;
+        projectsTableData[2].values = response.data.creatinine_phosphokinase;
+        projectsTableData[3].values = response.data.ejection_fraction;
+        projectsTableData[4].values = response.data.platelets;
+        projectsTableData[5].values = response.data.serum_creatinine;
+        projectsTableData[6].values = response.data.serum_sodium;
+        projectsTableData[7].values = response.data.time;
+        projectsTableData[8].values = response.data.prediction === 1 ? "Negative" : "Positive";
+      })
+      .catch((err) => {
+        console.error("Error fetching data: ", err);
+      });
+  }, []);
 
   return (
     <div className="mt-12">
@@ -84,14 +135,14 @@ export function Home() {
           >
             <div>
               <Typography variant="h6" color="blue-gray" className="mb-1">
-                Projects
+                Report
               </Typography>
               <Typography
                 variant="small"
                 className="flex items-center gap-1 font-normal text-blue-gray-600"
               >
                 <CheckCircleIcon strokeWidth={3} className="h-4 w-4 text-blue-gray-200" />
-                <strong>30 done</strong> this month
+                <strong>Tested</strong> Report
               </Typography>
             </div>
             <Menu placement="left-start">
@@ -115,7 +166,7 @@ export function Home() {
             <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {["companies", "members", "budget", "completion"].map(
+                  {["Checked", "Values"].map(
                     (el) => (
                       <th
                         key={el}
@@ -134,7 +185,7 @@ export function Home() {
               </thead>
               <tbody>
                 {projectsTableData.map(
-                  ({ img, name, members, budget, completion }, key) => {
+                  ({ name, values }, key) => {
                     const className = `py-3 px-5 ${
                       key === projectsTableData.length - 1
                         ? ""
@@ -144,38 +195,11 @@ export function Home() {
                     return (
                       <tr key={name}>
                         <td className={className}>
-                          <div className="flex items-center gap-4">
-                            <Avatar src={img} alt={name} size="sm" />
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-bold"
-                            >
-                              {name}
-                            </Typography>
-                          </div>
-                        </td>
-                        <td className={className}>
-                          {members.map(({ img, name }, key) => (
-                            <Tooltip key={name} content={name}>
-                              <Avatar
-                                src={img}
-                                alt={name}
-                                size="xs"
-                                variant="circular"
-                                className={`cursor-pointer border-2 border-white ${
-                                  key === 0 ? "" : "-ml-2.5"
-                                }`}
-                              />
-                            </Tooltip>
-                          ))}
-                        </td>
-                        <td className={className}>
                           <Typography
                             variant="small"
                             className="text-xs font-medium text-blue-gray-600"
                           >
-                            {budget}
+                            {name}
                           </Typography>
                         </td>
                         <td className={className}>
@@ -184,14 +208,8 @@ export function Home() {
                               variant="small"
                               className="mb-1 block text-xs font-medium text-blue-gray-600"
                             >
-                              {completion}%
+                              {values}
                             </Typography>
-                            <Progress
-                              value={completion}
-                              variant="gradient"
-                              color={completion === 100 ? "green" : "blue"}
-                              className="h-1"
-                            />
                           </div>
                         </td>
                       </tr>
@@ -210,17 +228,13 @@ export function Home() {
             className="m-0 p-6"
           >
             <Typography variant="h6" color="blue-gray" className="mb-2">
-              Orders Overview
+              Reported Suggestions 
             </Typography>
             <Typography
               variant="small"
               className="flex items-center gap-1 font-normal text-blue-gray-600"
             >
-              <ArrowUpIcon
-                strokeWidth={3}
-                className="h-3.5 w-3.5 text-green-500"
-              />
-              <strong>24%</strong> this month
+              <strong>{statisticsCardsData[3].value}</strong> this time
             </Typography>
           </CardHeader>
           <CardBody className="pt-0">

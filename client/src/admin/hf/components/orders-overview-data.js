@@ -1,49 +1,34 @@
 import {
   BellIcon,
   PlusCircleIcon,
-  ShoppingCartIcon,
-  CreditCardIcon,
-  LockOpenIcon,
-  BanknotesIcon,
 } from "@heroicons/react/24/solid";
 
 export const ordersOverviewData = [
   {
-    icon: BellIcon,
+    icon: PlusCircleIcon,
     color: "text-blue-gray-300",
-    title: "$2400, Design changes",
-    description: "22 DEC 7:20 PM",
+    title: "Cardiac Resynchronization Therapy (CRT)",
+    description: "Uses a specialized pacemaker to improve the coordination of heartbeats in patients with severe heart failure and electrical conduction issues. Involves implantation of a device similar to an ICD.",
   },
   {
     icon: PlusCircleIcon,
     color: "text-blue-gray-300",
-    title: "New order #1832412",
-    description: "21 DEC 11 PM",
+    title: "Heart Valve Repair or Replacement",
+    description: "For patients with heart failure due to valve problems, surgery may be needed to repair or replace damaged valves.Performed surgically or via minimally invasive techniques.",
   },
   {
-    icon: ShoppingCartIcon,
+    icon: PlusCircleIcon,
     color: "text-blue-gray-300",
-    title: "Server payments for April",
-    description: "21 DEC 9:34 PM",
+    title: "Ventricular Assist Device (VAD)",
+    description: "A mechanical pump implanted to help the heart pump blood effectively, often used as a bridge to transplant or in cases of severe heart failure. Surgically implanted.",
   },
   {
-    icon: CreditCardIcon,
+    icon: PlusCircleIcon,
     color: "text-blue-gray-300",
-    title: "New card added for order #4395133",
-    description: "20 DEC 2:20 AM",
+    title: "Heart Transplant",
+    description: "For patients with end-stage heart failure who do not respond to other treatments, a heart transplant may be necessary. Involves replacing the diseased heart with a healthy donor heart.",
   },
-  {
-    icon: LockOpenIcon,
-    color: "text-blue-gray-300",
-    title: "Unlock packages for development",
-    description: "18 DEC 4:54 AM",
-  },
-  {
-    icon: BanknotesIcon,
-    color: "text-blue-gray-300",
-    title: "New order #9583120",
-    description: "17 DEC",
-  },
+  
 ];
 
 export default ordersOverviewData;

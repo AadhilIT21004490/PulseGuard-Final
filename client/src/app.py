@@ -137,6 +137,28 @@ def predict_heart_failure():
             cursor.close()
             connection.close()
 
+@app.route('/hf/latest', methods=['GET'])
+def get_latest_hf():
+    connection = create_db_connection()  # Create a new database connection
+    cursor = connection.cursor(dictionary=True)
+    try:
+        # Query to fetch the latest record from the stroke_data table
+        query = "SELECT * FROM heart_failure_data ORDER BY id DESC LIMIT 1"
+        cursor.execute(query)
+        latest_record = cursor.fetchone()  # Fetch the latest record
+
+        if latest_record:
+            return jsonify(latest_record)
+        else:
+            return jsonify({'message': 'No records found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+
 @app.route('/atrial', methods=['POST'])
 def predict_af():
     data = request.get_json(force=True)
