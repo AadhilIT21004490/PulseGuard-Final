@@ -1,49 +1,34 @@
 import {
   BellIcon,
   PlusCircleIcon,
-  ShoppingCartIcon,
-  CreditCardIcon,
-  LockOpenIcon,
-  BanknotesIcon,
 } from "@heroicons/react/24/solid";
 
 export const ordersOverviewData = [
   {
-    icon: BellIcon,
+    icon: PlusCircleIcon,
     color: "text-blue-gray-300",
-    title: "$2400, Design changes",
-    description: "22 DEC 7:20 PM",
+    title: "Aspirin",
+    description: "Reduces blood clotting by inhibiting platelet aggregation. This helps prevent the growth of existing clots and formation of new ones. Typically given as an oral tablet. In some acute settings, it might be chewed to speed up absorption.",
   },
   {
     icon: PlusCircleIcon,
     color: "text-blue-gray-300",
-    title: "New order #1832412",
-    description: "21 DEC 11 PM",
+    title: "Thrombolytics",
+    description: "Dissolves blood clots that are blocking blood flow to the heart. This can help restore blood flow and minimize heart muscle damage. Given intravenously, usually within a few hours of the heart attack onset.",
   },
   {
-    icon: ShoppingCartIcon,
+    icon: PlusCircleIcon,
     color: "text-blue-gray-300",
-    title: "Server payments for April",
-    description: "21 DEC 9:34 PM",
+    title: "Diet and Exercise",
+    description: "Emphasis on a heart-healthy diet rich in fruits, vegetables, whole grains, lean proteins, and healthy fats. Regular physical activity strengthens the heart, improves circulation, and helps manage weight and other risk factors. ",
   },
   {
-    icon: CreditCardIcon,
+    icon: PlusCircleIcon,
     color: "text-blue-gray-300",
-    title: "New card added for order #4395133",
-    description: "20 DEC 2:20 AM",
+    title: "Cardiac Rehabilitation",
+    description: "Includes supervised exercise programs, education on heart-healthy living, psychological support, and counseling.",
   },
-  {
-    icon: LockOpenIcon,
-    color: "text-blue-gray-300",
-    title: "Unlock packages for development",
-    description: "18 DEC 4:54 AM",
-  },
-  {
-    icon: BanknotesIcon,
-    color: "text-blue-gray-300",
-    title: "New order #9583120",
-    description: "17 DEC",
-  },
+  
 ];
 
 export default ordersOverviewData;
