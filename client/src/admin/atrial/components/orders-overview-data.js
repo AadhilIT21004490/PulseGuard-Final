@@ -1,49 +1,34 @@
 import {
   BellIcon,
   PlusCircleIcon,
-  ShoppingCartIcon,
-  CreditCardIcon,
-  LockOpenIcon,
-  BanknotesIcon,
 } from "@heroicons/react/24/solid";
 
 export const ordersOverviewData = [
   {
-    icon: BellIcon,
+    icon: PlusCircleIcon,
     color: "text-blue-gray-300",
-    title: "$2400, Design changes",
-    description: "22 DEC 7:20 PM",
+    title: "Anticoagulant Therapy",
+    description: "To reduce the risk of stroke by preventing blood clots from forming in the heart. Medications like warfarin or direct oral anticoagulants (DOACs) are commonly prescribed, especially for patients with a higher stroke risk.",
   },
   {
     icon: PlusCircleIcon,
     color: "text-blue-gray-300",
-    title: "New order #1832412",
-    description: "21 DEC 11 PM",
+    title: "Rate Control",
+    description: "To slow down the heart rate without necessarily restoring normal rhythm. Medications like beta-blockers, calcium channel blockers, and digoxin are used to keep the heart rate under control, improving symptoms.",
   },
   {
-    icon: ShoppingCartIcon,
+    icon: PlusCircleIcon,
     color: "text-blue-gray-300",
-    title: "Server payments for April",
-    description: "21 DEC 9:34 PM",
+    title: "Rhythm Control",
+    description: "To restore and maintain a normal heart rhythm. Antiarrhythmic medications or procedures like electrical cardioversion and catheter ablation are used to correct abnormal heart rhythms.",
   },
   {
-    icon: CreditCardIcon,
+    icon: PlusCircleIcon,
     color: "text-blue-gray-300",
-    title: "New card added for order #4395133",
-    description: "20 DEC 2:20 AM",
+    title: "Lifestyle Modifications",
+    description: "Purpose: To manage risk factors and prevent triggers for AF.",
   },
-  {
-    icon: LockOpenIcon,
-    color: "text-blue-gray-300",
-    title: "Unlock packages for development",
-    description: "18 DEC 4:54 AM",
-  },
-  {
-    icon: BanknotesIcon,
-    color: "text-blue-gray-300",
-    title: "New order #9583120",
-    description: "17 DEC",
-  },
+  
 ];
 
 export default ordersOverviewData;
