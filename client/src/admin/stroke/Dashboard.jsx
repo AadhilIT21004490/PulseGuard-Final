@@ -71,7 +71,7 @@ export function Home() {
         projectsTableData[1].values = response.data.age;
         projectsTableData[2].values = response.data.hypertension === 1 ? "Yes" : "No";
         projectsTableData[3].values = response.data.heart_disease === 1 ? "Yes" : "No";
-        projectsTableData[4].values = response.data.ever_married === 1 ? "Married" : "No";
+        projectsTableData[4].values = response.data.ever_married === 1 ? "Married" : "Un-Married";
         projectsTableData[5].values = response.data.residence_type === 1 ? "Urban" : "Rural";
         projectsTableData[6].values = response.data.avg_glucose_level;
         projectsTableData[7].values = response.data.bmi;
