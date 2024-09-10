@@ -5,6 +5,12 @@ import pickle
 import numpy as np
 import mysql.connector
 from mysql.connector import Error
+from pymongo import MongoClient
+from bson.objectid import ObjectId
+from werkzeug.security import generate_password_hash, check_password_hash
+import logging
+import jwt
+import datetime
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
@@ -76,7 +82,27 @@ def predict_stroke():
         if connection.is_connected():
             cursor.close()
             connection.close()
+        
+@app.route('/stroke/latest', methods=['GET'])
+def get_latest_record():
+    connection = create_db_connection()  # Create a new database connection
+    cursor = connection.cursor(dictionary=True)
+    try:
+        # Query to fetch the latest record from the stroke_data table
+        query = "SELECT * FROM stroke_data ORDER BY id DESC LIMIT 1"
+        cursor.execute(query)
+        latest_record = cursor.fetchone()  # Fetch the latest record
 
+        if latest_record:
+            return jsonify(latest_record)
+        else:
+            return jsonify({'message': 'No records found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
 
 @app.route('/hf', methods=['POST'])
 def predict_heart_failure():
@@ -116,7 +142,26 @@ def predict_heart_failure():
         if connection.is_connected():
             cursor.close()
             connection.close()
+@app.route('/hf/latest', methods=['GET'])
+def get_latest_hf():
+    connection = create_db_connection()  # Create a new database connection
+    cursor = connection.cursor(dictionary=True)
+    try:
+        # Query to fetch the latest record from the stroke_data table
+        query = "SELECT * FROM heart_failure_data ORDER BY id DESC LIMIT 1"
+        cursor.execute(query)
+        latest_record = cursor.fetchone()  # Fetch the latest record
 
+        if latest_record:
+            return jsonify(latest_record)
+        else:
+            return jsonify({'message': 'No records found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
 @app.route('/atrial', methods=['POST'])
 def predict_af():
     data = request.get_json(force=True)
@@ -149,6 +194,27 @@ def predict_af():
         if connection.is_connected():
             cursor.close()
             connection.close()
+@app.route('/atrial/latest', methods=['GET'])
+def get_latest_atrial():
+    connection = create_db_connection()  # Create a new database connection
+    cursor = connection.cursor(dictionary=True)
+    try:
+        # Query to fetch the latest record from the stroke_data table
+        query = "SELECT * FROM af_data ORDER BY id DESC LIMIT 1"
+        cursor.execute(query)
+        latest_record = cursor.fetchone()  # Fetch the latest record
+
+        if latest_record:
+            return jsonify(latest_record)
+        else:
+            return jsonify({'message': 'No records found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
 # ======================================================================================
 # Heart Attack API
 # ======================================================================================
@@ -208,8 +274,92 @@ def predict_heart_attack():
         if connection.is_connected():
             cursor.close()
             connection.close()
+@app.route('/hattack/latest', methods=['GET'])
+def get_latest_hattack():
+    connection = create_db_connection()  # Create a new database connection
+    cursor = connection.cursor(dictionary=True)
+    try:
+        # Query to fetch the latest record from the stroke_data table
+        query = "SELECT * FROM heart_attack_data ORDER BY id DESC LIMIT 1"
+        cursor.execute(query)
+        latest_record = cursor.fetchone()  # Fetch the latest record
+
+        if latest_record:
+            return jsonify(latest_record)
+        else:
+            return jsonify({'message': 'No records found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
 # ======================================================================================
 # ======================================================================================
+
+
+# ======================================================================================
+# MONGO DB CONNECTION FOR AUTH
+# ======================================================================================
+
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+
+# MongoDB connection setup
+client = MongoClient("mongodb+srv://aashif1979:DNDS5P15dDGCWFt4@cluster0.nslx2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+db = client['pulse_guard']  # database name
+users_collection = db['users']
+
+# Signup route
+@app.route('/api/signup', methods=['POST'])
+def signup():
+    data = request.get_json()
+    username = data['username']
+    email = data['email']
+    password = data['password']
+
+    if users_collection.find_one({'email': email}):
+        return jsonify({'message': 'User already exists'}), 400
+
+    hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+
+    user_data = {
+        'username': username,
+        'email': email,
+        'password': hashed_password
+    }
+
+    users_collection.insert_one(user_data)
+
+    return jsonify({'message': 'User created successfully'}), 201
+
+# Secret key for JWT encoding and decoding
+app.config['SECRET_KEY'] = b'a\x9c\x12\xd4z"\x1fB\t\xa2\\\xbe|\xcc\xd8\x7f":T#\xd6y\xe2\xb8'
+
+# Login route
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    email = data['email']
+    password = data['password']
+
+    user = users_collection.find_one({'email': email})
+
+    if user and check_password_hash(user['password'], password):
+        # Create JWT token
+        token = jwt.encode({
+            'email': email,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+        }, app.config['SECRET_KEY'], algorithm='HS256')
+
+        return jsonify({'token': token}), 200
+    else:
+        return jsonify({'message': 'Invalid credentials'}), 401
+    
+# ======================================================================================
+# ======================================================================================
+
 
 if __name__ == '__main__':
     app.run(debug=True)
