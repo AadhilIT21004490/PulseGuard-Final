@@ -44,7 +44,7 @@ export const statisticsChartsData = [
         colors: "#388e3c",
         plotOptions: {
           bar: {
-            columnWidth: "16%",
+            columnWidth: "30%",
             borderRadius: 5,
           },
         },
@@ -72,7 +72,7 @@ export const statisticsChartsData = [
         colors: "#388e3c",
         plotOptions: {
           bar: {
-            columnWidth: "16%",
+            columnWidth: "30%",
             borderRadius: 5,
           },
         },

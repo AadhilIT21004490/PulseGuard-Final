@@ -1,30 +1,5 @@
 import { chartsConfig } from "./charts-config";
 
-const websiteViewsChart = {
-  type: "bar",
-  height: 220,
-  series: [
-    {
-      name: "Values",
-      data: [],
-    },
-  ],
-  options: {
-    ...chartsConfig,
-    colors: "#388e3c",
-    plotOptions: {
-      bar: {
-        columnWidth: "16%",
-        borderRadius: 5,
-      },
-    },
-    xaxis: {
-      ...chartsConfig.xaxis,
-      categories: ["avg_glucose_level", "bmi", "age"],
-    },
-  },
-};
-
 export const statisticsChartsData = [
   {
     color: "white",
@@ -44,7 +19,7 @@ export const statisticsChartsData = [
         colors: "#388e3c",
         plotOptions: {
           bar: {
-            columnWidth: "16%",
+            columnWidth: "30%",
             borderRadius: 5,
           },
         },
@@ -72,7 +47,7 @@ export const statisticsChartsData = [
         colors: "#388e3c",
         plotOptions: {
           bar: {
-            columnWidth: "16%",
+            columnWidth: "30%",
             borderRadius: 5,
           },
         },
@@ -82,6 +57,35 @@ export const statisticsChartsData = [
       },
     },
   },
-];
+  {
+    color: "white",
+    title: "Summery Graph",
+    description: "Overview of your data",
+    footer: "Summery",
+    chart: {
+      type: "line",
+    height: 220,
+    series: [
+      {
+        name: "Values",
+        data: [0, 0, 0, 0],
+      },
+    ],
+    options: {
+      ...chartsConfig,
+      colors: ["#0288d1"],
+      stroke: {
+        lineCap: "round",
+      },
+      markers: {
+        size: 5,
+      },
+      xaxis: {
+        categories: ["Gender", "Age", "Glucose Level", "Prediction"],
+      },           
+    },
+      },
+    },
+  ];
 
 export default statisticsChartsData;

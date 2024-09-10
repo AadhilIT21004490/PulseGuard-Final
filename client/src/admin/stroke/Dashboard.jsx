@@ -35,7 +35,7 @@ export function Home() {
   };
 
   // const [data, setData] = useState({ age: 0 }); // Initialize with default value
-  const [data, setData] = useState({ avg_glucose_level: 0, bmi: 0, age: 0 });
+  const [data, setData] = useState({ });
 
   useEffect(() => {
     // Fetch the latest stroke data
@@ -59,6 +59,13 @@ export function Home() {
           response.data.bmi,
           response.data.age,
         ];
+
+        statisticsChartsData[1].chart.series[0].data = [
+          response.data.gender,
+          response.data.age,
+          response.data.avg_glucose_level,
+          response.data.prediction,
+        ];        
 
         projectsTableData[0].values = response.data.gender === 1 ? "Male" : "Female";
         projectsTableData[1].values = response.data.age;
