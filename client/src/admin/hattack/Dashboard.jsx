@@ -51,10 +51,17 @@ export function Home() {
         // Update the Heart Disease card (index 2)
         statisticsCardsData[2].value = response.data.Heart_Rate;
         // Update the Heart Disease card (index 2)
-        statisticsCardsData[3].value = response.data.Prediction === 1 ? "Positive" : "Negative";
+        statisticsCardsData[3].value = response.data.Prediction === 1 ? "Negative" : "Positive";
 
         // Update the chart with fetched values
         statisticsChartsData[0].chart.series[0].data = [
+          response.data.Heart_Rate,
+          response.data.Systolic_BP,
+          response.data.Diastolic_BP,
+        ];
+
+        statisticsChartsData[1].chart.series[0].data = [
+          response.data.Age,
           response.data.Heart_Rate,
           response.data.Systolic_BP,
           response.data.Diastolic_BP,
@@ -68,7 +75,7 @@ export function Home() {
         projectsTableData[5].values = response.data.Blood_Sugar;
         projectsTableData[6].values = response.data.CK_MB;
         projectsTableData[7].values = response.data.Troponin;
-        projectsTableData[8].values = response.data.Prediction === 1 ? "Positive" : "Negative";
+        projectsTableData[8].values = response.data.Prediction === 1 ? "Negative" : "Positive";
       })
       .catch((err) => {
         console.error("Error fetching data: ", err);

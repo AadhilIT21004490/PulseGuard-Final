@@ -82,6 +82,35 @@ export const statisticsChartsData = [
       },
     },
   },
+  {
+    color: "white",
+    title: "Summery Graph",
+    description: "Overview of your data",
+    footer: "Summery",
+    chart: {
+      type: "line",
+    height: 220,
+    series: [
+      {
+        name: "Values",
+        data: [0, 0, 0, 0],
+      },
+    ],
+    options: {
+      ...chartsConfig,
+      colors: ["#0288d1"],
+      stroke: {
+        lineCap: "round",
+      },
+      markers: {
+        size: 5,
+      },
+      xaxis: {
+        categories: ["Age", "Heart_Rate", "Systolic_BP", "Diastolic_BP"],
+      },           
+    },
+      },
+    },
 ];
 
 export default statisticsChartsData;
