@@ -46,7 +46,6 @@ const Stroke = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Display loading or processing status to the user
     setError(null);
     setPrediction(null);
 
@@ -84,8 +83,108 @@ const Stroke = () => {
           <form onSubmit={handleSubmit} className="max-w-xl min-w-max m-4 p-10 bg-white rounded-3xl shadow-xl">
             <p className="text-gray-800 font-medium">Stroke Prediction</p>
             <div className="grid gap-4 grid-cols-2">
+
+              {/* Gender Dropdown */}
+              <div className="mt-2 w-full pr-1">
+                <label className="block text-sm text-gray-600" htmlFor="gender">Gender</label>
+                <select
+                  className="w-full px-5 py-1 text-gray-700 bg-gray-200 rounded"
+                  id="gender"
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  required
+                  aria-label="gender"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="1">Male</option>
+                  <option value="0">Female</option>
+                </select>
+              </div>
+
+              {/* Hypertension Dropdown */}
+              <div className="mt-2 w-full pr-1">
+                <label className="block text-sm text-gray-600" htmlFor="hypertension">Hypertension</label>
+                <select
+                  className="w-full px-5 py-1 text-gray-700 bg-gray-200 rounded"
+                  id="hypertension"
+                  name="hypertension"
+                  value={formData.hypertension}
+                  onChange={handleChange}
+                  required
+                  aria-label="hypertension"
+                >
+                  <option value="">Select Hypertension</option>
+                  <option value="1">Yes</option>
+                  <option value="0">No</option>
+                </select>
+              </div>
+
+              {/* Heart Disease Dropdown */}
+              <div className="mt-2 w-full pr-1">
+                <label className="block text-sm text-gray-600" htmlFor="heart_disease">Heart Disease</label>
+                <select
+                  className="w-full px-5 py-1 text-gray-700 bg-gray-200 rounded"
+                  id="heart_disease"
+                  name="heart_disease"
+                  value={formData.heart_disease}
+                  onChange={handleChange}
+                  required
+                  aria-label="heart_disease"
+                >
+                  <option value="">Select Heart Disease</option>
+                  <option value="1">Yes</option>
+                  <option value="0">No</option>
+                </select>
+              </div>
+
+              {/* Ever Married Dropdown */}
+              <div className="mt-2 w-full pr-1">
+                <label className="block text-sm text-gray-600" htmlFor="ever_married">Ever Married</label>
+                <select
+                  className="w-full px-5 py-1 text-gray-700 bg-gray-200 rounded"
+                  id="ever_married"
+                  name="ever_married"
+                  value={formData.ever_married}
+                  onChange={handleChange}
+                  required
+                  aria-label="ever_married"
+                >
+                  <option value="">Select Marital Status</option>
+                  <option value="1">Married</option>
+                  <option value="0">Un-Married</option>
+                </select>
+              </div>
+
+              {/* Residence Type Dropdown */}
+              <div className="mt-2 w-full pr-1">
+                <label className="block text-sm text-gray-600" htmlFor="Residence_type">Residence Type</label>
+                <select
+                  className="w-full px-5 py-1 text-gray-700 bg-gray-200 rounded"
+                  id="Residence_type"
+                  name="Residence_type"
+                  value={formData.Residence_type}
+                  onChange={handleChange}
+                  required
+                  aria-label="Residence_type"
+                >
+                  <option value="">Select Residence Type</option>
+                  <option value="1">Urban</option>
+                  <option value="0">Rural</option>
+                </select>
+              </div>
+
+              {/* Other input fields */}
               {Object.keys(formData).map((key) => {
-                if (key.startsWith('smoking_status') || key.startsWith('work_type')) return null; // Skip smoking status and work type for individual inputs
+                if (
+                  key.startsWith('smoking_status') || 
+                  key.startsWith('work_type') || 
+                  key === 'gender' || 
+                  key === 'hypertension' || 
+                  key === 'heart_disease' || 
+                  key === 'ever_married' || 
+                  key === 'Residence_type'
+                ) return null; // Skip smoking status, work type, and other dropdown fields
                 return (
                   <div key={key} className="mt-2 w-full pr-1">
                     <label className="block text-sm text-gray-600" htmlFor={key}>{key.replace('_', ' ')}</label>
@@ -153,7 +252,7 @@ const Stroke = () => {
               <div className="w-full sm:w-1/2 lg:w-1/3">
                 <div className="bg-neutral-900 rounded-3xl p-6 text-md border border-neutral-800">
                   <h1 className={`text-4xl font-semibold ${prediction === 1 ? 'text-red-500' : 'text-green-500'}`}>
-                    {prediction === 1 ? (<span>NEGATIVE <TriangleAlert /></span>) : (<span>POSITIVE</span>)}
+                    {prediction === 1 ? (<span>POSITIVE<TriangleAlert /></span>) : (<span>NEGATIVE</span>)}
                   </h1>
                   <h1>_</h1>
                   <p>Schedule regular check-ups to monitor your heart health. This includes tracking blood pressure, cholesterol levels, blood sugar levels, and weight.</p>
