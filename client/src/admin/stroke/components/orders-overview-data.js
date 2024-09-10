@@ -1,49 +1,34 @@
 import {
   BellIcon,
   PlusCircleIcon,
-  ShoppingCartIcon,
-  CreditCardIcon,
-  LockOpenIcon,
-  BanknotesIcon,
 } from "@heroicons/react/24/solid";
 
 export const ordersOverviewData = [
   {
-    icon: BellIcon,
+    icon: PlusCircleIcon,
     color: "text-blue-gray-300",
-    title: "$2400, Design changes",
-    description: "22 DEC 7:20 PM",
+    title: "Physical Therapy",
+    description: "Regular Exercise: Engage in guided exercises that focus on improving strength, balance, and coordination. A physical therapist can provide exercises that are tailored to your needs.",
   },
   {
     icon: PlusCircleIcon,
     color: "text-blue-gray-300",
-    title: "New order #1832412",
-    description: "21 DEC 11 PM",
+    title: "Occupational Therapy",
+    description: "Fine Motor Skills Training: Work on improving hand and arm movements through activities like drawing, buttoning clothes, or using utensils.",
   },
   {
-    icon: ShoppingCartIcon,
+    icon: PlusCircleIcon,
     color: "text-blue-gray-300",
-    title: "Server payments for April",
-    description: "21 DEC 9:34 PM",
+    title: "Speech and Language Therapy",
+    description: "Speech Therapy: Work with a speech therapist to improve speaking, swallowing, and communication skills if affected.",
   },
   {
-    icon: CreditCardIcon,
+    icon: PlusCircleIcon,
     color: "text-blue-gray-300",
-    title: "New card added for order #4395133",
-    description: "20 DEC 2:20 AM",
+    title: "Healthy Diet",
+    description: "Balanced Nutrition: A diet rich in fruits, vegetables, lean proteins, and whole grains supports brain recovery and overall health.",
   },
-  {
-    icon: LockOpenIcon,
-    color: "text-blue-gray-300",
-    title: "Unlock packages for development",
-    description: "18 DEC 4:54 AM",
-  },
-  {
-    icon: BanknotesIcon,
-    color: "text-blue-gray-300",
-    title: "New order #9583120",
-    description: "17 DEC",
-  },
+  
 ];
 
 export default ordersOverviewData;
