@@ -1,8 +1,42 @@
-import React from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
-const Signup = () => {
+const Signup = ({ setIsAuthenticated }) => {
+
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
+
+    const handleSignup = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post('http://localhost:5000/api/signup', {
+                username,
+                email,
+                password
+            });
+
+    // Save token in localStorage
+    localStorage.setItem('token', response.data.token);
+
+    // Update authentication state
+    setIsAuthenticated(true);
+
+    // Navigate to the homepage
+    navigate('/');
+    
+    } catch (error) {
+      console.error('Error signing up:', error);
+      alert('Error signing up');
+    }
+  };
+
   return (
     <>
             <div class="flex h-screen">
@@ -103,26 +137,41 @@ const Signup = () => {
                 <div class="mt-4 text-sm text-gray-600 text-center">
                     <p>or with email</p>
                 </div>
-                <form action="#" method="POST" class="space-y-4">
+                <form onSubmit={handleSignup} class="space-y-4">
                     <div>
                     <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-                    <input type="text" id="username" name="username" class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300 text-black bg-white"/>
+                    <input 
+                        type="text"
+                        placeholder="Username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}required 
+                        class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300 text-black bg-white"/>
 
                     </div>
                     <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="text" id="email" name="email" class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300  text-black bg-white"/>
+                    <input 
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)} required 
+                        class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300  text-black bg-white"/>
                     </div>
                     <div>
                     <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                    <input type="password" id="password" name="password" class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300  text-black bg-white"/>
+                    <input 
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)} required 
+                        class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300  text-black bg-white"/>
                     </div>
                     <div>
                     <button type="submit" class="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300 ">Sign Up</button>
                     </div>
                 </form>
                 <div class="mt-4 text-sm text-gray-600 text-center">
-                    <p>Already have an account? <a href="#" class="text-black hover:underline">Login here</a>
+                    <p>Already have an account? <Link to="/login" class="text-black hover:underline">Login here</Link>
                     </p>
                 </div>
                 </div>

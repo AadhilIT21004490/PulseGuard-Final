@@ -26,7 +26,7 @@ export const statisticsCardsData = [
   {
     color: "gray",
     icon: BanknotesIcon,
-    title: "Heart Rate",
+    title: "BMI",
     value: 0,
     footer: {
       color: "text-green-500",

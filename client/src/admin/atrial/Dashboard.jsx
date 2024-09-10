@@ -36,20 +36,23 @@ export function Home() {
 
   // const [data, setData] = useState({ age: 0 }); // Initialize with default value
   const [data, setData] = useState({ });
-
+  
   useEffect(() => {
     // Fetch the latest stroke data
     axios
       .get("http://127.0.0.1:5000/atrial/latest")
       .then((response) => {
         setData(response.data); // Set the fetched data
+        const heightInMeters = response.data.height / 100;
+        const BMI = response.data.weight/(heightInMeters*heightInMeters)
+
 
         // Update the statisticsCardsData with fetched age
         statisticsCardsData[0].value = response.data.age;
         // Update the Gender card (index 1)
         statisticsCardsData[1].value = response.data.sex === 1 ? "Male" : "Female";
         // Update the Heart Disease card (index 2)
-        statisticsCardsData[2].value = response.data.height;
+        statisticsCardsData[2].value = BMI;
         // Update the Heart Disease card (index 2)
         statisticsCardsData[3].value = response.data.prediction === 0 ? "Normal" : response.data.prediction === 1 ? "LOW RISK" : "HIGH RISK";
 
